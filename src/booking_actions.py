@@ -1,3 +1,4 @@
+
 """
 booking_actions.py (Ian)
 
@@ -34,7 +35,7 @@ def _get_bookings(cursor, passenger_id):
     """Return the passenger's bookings together with their destination."""
     cursor.execute(
         """
-        SELECT p.passenger_id, p.name, p.destination,
+        SELECT p.passenger_id, p.passenger_name, p.destination,
                b.booking_id, b.class_tier, b.seat_preference
         FROM passengers p
         JOIN bookings b ON p.passenger_id = b.passenger_id
@@ -94,7 +95,7 @@ def update_destination(passenger_id, new_destination):
     cursor = conn.cursor(dictionary=True)
     try:
         cursor.execute(
-            "SELECT passenger_id, name, destination FROM passengers WHERE passenger_id = %s",
+            "SELECT passenger_id, paseenger_name, destination FROM passengers WHERE passenger_id = %s",
             (passenger_id,),
         )
         before = cursor.fetchone()
@@ -110,7 +111,7 @@ def update_destination(passenger_id, new_destination):
         conn.commit()
 
         cursor.execute(
-            "SELECT passenger_id, name, destination FROM passengers WHERE passenger_id = %s",
+            "SELECT passenger_id, passenger_name, destination FROM passengers WHERE passenger_id = %s",
             (passenger_id,),
         )
         after = cursor.fetchone()
@@ -152,7 +153,7 @@ def delete_booking(booking_id):
         cursor.execute("SELECT COUNT(*) AS n FROM bookings WHERE booking_id = %s", (booking_id,))
         booking_gone = cursor.fetchone()["n"] == 0
         cursor.execute(
-            "SELECT passenger_id, name FROM passengers WHERE passenger_id = %s",
+            "SELECT passenger_id, passenger_name FROM passengers WHERE passenger_id = %s",
             (booking["passenger_id"],),
         )
         passenger = cursor.fetchone()
@@ -221,3 +222,42 @@ def run():
 
 if __name__ == "__main__":
     run()
+    
+"""Features 3 and 4: update a booking and delete a booking."""
+from db import get_connection
+
+UPDATE_SQL = """
+    UPDATE bookings
+    SET seat_preference = %s
+    WHERE booking_id = %s
+"""
+DELETE_SQL = "DELETE FROM bookings WHERE booking_id = %s"
+
+
+def update_seat_preference(booking_id, new_seat):
+    """Change a booking's seat preference by ID."""
+    conn = get_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute(UPDATE_SQL, (new_seat, booking_id))
+        conn.commit()
+        changed = cur.rowcount
+    finally:
+        conn.close()
+    print(f"Updated {changed} booking(s)." if changed else "Booking not found (or value unchanged).")
+    return changed
+
+
+def delete_booking(booking_id):
+    """Delete one booking by ID. The passenger row stays; no cascade is used."""
+    conn = get_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute(DELETE_SQL, (booking_id,))
+        conn.commit()
+        deleted = cur.rowcount
+    finally:
+        conn.close()
+    print(f"Deleted {deleted} booking(s)." if deleted else "Booking not found.")
+    return deleted
+
