@@ -31,7 +31,7 @@ def display_ticket_receipts(connections):
         return
 
     for receipt in receipts:
-        print(f"--\n Booking Number:                   {receipt['booking_id']} --")
+        print(f"--\n Booking Number:    {receipt['booking_id']} --")
         print(f"--Passenger's name:     {receipt['passenger_name']} --")
         print(f"--Location:             {receipt['current_location']}--")
         print(f"--Destination:          {receipt['destination']}--")
