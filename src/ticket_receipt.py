@@ -4,7 +4,7 @@ from db import get_connection
 SQL = """
     SELECT
         b.booking_id,
-        p.name AS passenger_name,
+        p.passenger_name,
         p.current_location,
         b.destination,
         b.travel_date,
