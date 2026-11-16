@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS passengers;
 
 CREATE TABLE passengers (
     passenger_id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+    passenger_name VARCHAR(100) NOT NULL,
     current_location VARCHAR(100) NOT NULL,
     destination VARCHAR(100) NOT NULL,
     travel_date DATE NOT NULL
