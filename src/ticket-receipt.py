@@ -2,7 +2,8 @@ def get_ticket_receipts(connections): # func that fetches the receipt for passen
     cursor = connections.cursor(dictionary=True)
 
     try:
-        cursor.execute(SELECT 
+        cursor.execute(
+            """SELECT 
                  b.booking_id,
                  p.name, 
                  p.current_location,
@@ -17,7 +18,7 @@ def get_ticket_receipts(connections): # func that fetches the receipt for passen
             JOIN bookings AS b
             ON p.passenger_id = b.booking_id
             ORDER b.booking_id
-        )
+        """)
         return cursor.fetchall()
     finally:
         cursor.close()
