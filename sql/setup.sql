@@ -5,7 +5,7 @@ USE airline_db;
 
 CREATE TABLE passengers (
     passenger_id     INT          NOT NULL AUTO_INCREMENT,
-    name             VARCHAR(100) NOT NULL,
+    passenger_name             VARCHAR(100) NOT NULL,
     current_location VARCHAR(100) NOT NULL,
     PRIMARY KEY (passenger_id)
 );
