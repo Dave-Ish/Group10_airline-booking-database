@@ -1,27 +1,48 @@
-# Group 10 - Airline Booking Database
+# airline-booking-database
 
-Airline booking system - Business / First Class report.
+A small Python + MySQL program for passenger bookings. The SQL queries live inside the Python modules; MySQL setup and sample data are plain `.sql` scripts. All names and data are fictional.
 
-## What it does
-Shows only Business and First Class bookings.
-Economy bookings are excluded.
+## Requirements
+- Python 3.9+
+- MySQL 8 running locally
+- `pip install -r requirements.txt` (mysql-connector-python)
 
-Uses JOIN between passengers and bookings:
-WHERE class_tier IN ('Business', 'First')
+## Setup (works from a clean database)
+```bash
+python -m venv venv && source venv/bin/activate      # Windows: venv\Scripts\activate
+pip install -r requirements.txt
 
-## How to run
-py create_db.py
-$env:PYTHONPATH="src"; py -m src.tier_report
+mysql -u <your_user> -p < sql/setup.sql    # drops and recreates airline_db + both tables
+mysql -u <your_user> -p < sql/seed.sql     # 4 passengers, 4 bookings (Economy, Business, First)
 
-## Example output
-Booking ID: 1 | Latonia Uwase
-Route: Kigali -> Dubai | Tier: Business
+cp .env.example .env                       # then fill in your own values (never commit .env)
+```
+Set the variables from `.env` in your shell (`DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`), for example on macOS/Linux:
+```bash
+export DB_USER=your_user DB_PASSWORD=your_password
+```
 
-Booking ID: 2 | John Doe
-Route: Kigali -> London | Tier: First
+## Run
+```bash
+cd src
+python main.py
+```
 
-## Files
-- sql/ - MySQL schema + seed data
-- src/db.py - SQLite connection
-- src/tier_report.py - Business/First report
-- create_db.py - Creates the database
+| Menu option | Feature | File |
+|---|---|---|
+| 1 | List Business/First bookings (Economy excluded) | `src/tier_report.py` |
+| 2 | Ticket receipt using `INNER JOIN` (name, destination, tier, perks) | `src/ticket_receipt.py` |
+| 3 | Update a booking's seat preference by ID | `src/booking_actions.py` |
+| 4 | Delete a booking by ID (passenger stays) | `src/booking_actions.py` |
+
+## Design
+- `passengers(passenger_id PK, name, current_location)`
+- `bookings(booking_id PK, passenger_id FK, destination, travel_date DATE, seat_preference, class_tier, lounge_pass_code, suite_number, chauffeur_service)`
+- Integer IDs; perks that do not apply are `NULL`; no `ON DELETE CASCADE`.
+- Deleting a booking leaves its passenger row intact. Deleting a passenger who still has bookings is blocked by the foreign key.
+
+## Demo script
+1. Run `setup.sql` and `seed.sql`, then `python main.py`.
+2. Option 1: Business/First only. Option 2 with IDs 1, 2, 3: Economy, Business, First receipts.
+3. Option 3 with ID 2: change the seat. Option 2 or a MySQL query shows the change.
+4. Option 4 with ID 3, then `SELECT * FROM passengers;` shows Sofia Marino is still there.

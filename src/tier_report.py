@@ -1,20 +1,23 @@
-from src.db import get_connection
+"""Feature 1: list Business and First bookings (Economy excluded)."""
+from db import get_connection
 
-def main():
+SQL = """
+    SELECT booking_id, passenger_id, destination, travel_date, class_tier
+    FROM bookings
+    WHERE class_tier IN ('Business', 'First')
+    ORDER BY class_tier, booking_id
+"""
+
+
+def list_premium_bookings():
     conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT b.booking_id, p.full_name, b.route, b.class_tier
-        FROM bookings b
-        JOIN passengers p ON b.passenger_id = p.passenger_id
-        WHERE b.class_tier IN ('Business', 'First')
-        ORDER BY b.booking_id
-    """)
-    for row in cur.fetchall():
-        print(f"Booking ID: {row['booking_id']} | {row['full_name']}")
-        print(f"Route: {row['route']} | Tier: {row['class_tier']}")
-        print()
-    conn.close()
-
-if __name__ == "__main__":
-    main()
+    try:
+        cur = conn.cursor()
+        cur.execute(SQL)
+        rows = cur.fetchall()
+    finally:
+        conn.close()
+    print(f"{'Booking':<8}{'Passenger':<10}{'Destination':<13}{'Date':<12}Tier")
+    for b_id, p_id, dest, date, tier in rows:
+        print(f"{b_id:<8}{p_id:<10}{dest:<13}{str(date):<12}{tier}")
+    return rows
