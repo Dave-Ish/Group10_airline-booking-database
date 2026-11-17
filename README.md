@@ -1,6 +1,22 @@
-# airline-booking-database
+# Group 10 – airline-booking-database
 
 A small Python + MySQL program for passenger bookings. The SQL queries live inside the Python modules; MySQL setup and sample data are plain `.sql` scripts. All names and data are fictional.
+
+## Team and contributions
+
+| Member | Contribution |
+|---|---|
+| Nicole | Schema (`sql/setup.sql`) |
+| Keji | Sample data (`sql/seed.sql`), video intro |
+| Latonia | Business/First report (`src/tier_report.py`) |
+| David | Ticket receipt with INNER JOIN (`src/ticket_receipt.py`) |
+| Ian | Update and delete booking (`src/booking_actions.py`) |
+| Thiery | DB connection, menu, README, integration (`src/db.py`, `src/main.py`) |
+
+Absent members: none
+
+Absent members: none
+Absent members:none
 
 ## Requirements
 - Python 3.9+
@@ -46,3 +62,7 @@ python main.py
 2. Option 1: Business/First only. Option 2 with IDs 1, 2, 3: Economy, Business, First receipts.
 3. Option 3 with ID 2: change the seat. Option 2 or a MySQL query shows the change.
 4. Option 4 with ID 3, then `SELECT * FROM passengers;` shows Sofia Marino is still there.
+5. To run the demo again, re-run `setup.sql` and `seed.sql` first, because step 4 deletes a booking.
+
+## Video outline
+Keji: intro. Nicole: schema. Keji: sample data. Latonia: tier report. David: ticket receipt. Ian: update and delete. Thiery: end-to-end run and close.
