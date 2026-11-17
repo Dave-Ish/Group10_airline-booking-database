@@ -1,8 +1,3 @@
--- Creates airline_db and both tables from a clean state.
-DROP DATABASE IF EXISTS airline_db;
-CREATE DATABASE airline_db;
-USE airline_db;
-
 CREATE TABLE passengers (
     passenger_id     INT          NOT NULL AUTO_INCREMENT,
     passenger_name             VARCHAR(100) NOT NULL,
@@ -25,3 +20,6 @@ CREATE TABLE bookings (
     CONSTRAINT fk_bookings_passenger
         FOREIGN KEY (passenger_id) REFERENCES passengers (passenger_id)
 );
+
+DESCRIBE passengers;
+DESCRIBE bookings;
